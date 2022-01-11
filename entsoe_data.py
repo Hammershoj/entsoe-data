@@ -12,7 +12,7 @@ end_pd = pd.Timestamp('20211231', tz='Europe/Brussels')
 
 #s = e.query_imbalance_prices(country_code='BE', start=start, end=end, as_dataframe=True)
 
-domains = ["DK"]
+domains = ["NO","DE"]
 
 for cntr in domains:
     df = e.query_generation_per_plant(country_code=cntr, start=start_pd, end=end_pd)
