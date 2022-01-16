@@ -7,17 +7,19 @@ from entsoe import EntsoePandasClient
 
 e = EntsoePandasClient(api_key=api_key, retry_count=20, retry_delay=30)
 
-start_pd = pd.Timestamp('20211230', tz='Europe/Brussels')
-end_pd = pd.Timestamp('20211231', tz='Europe/Brussels')
+start_pd = pd.Timestamp('20211201', tz='Europe/Brussels')
+end_pd = pd.Timestamp('20220101', tz='Europe/Brussels')
 
 #s = e.query_imbalance_prices(country_code='BE', start=start, end=end, as_dataframe=True)
 
-domains = ["NO","DE"]
+domains = ["DK_CA","NO","DE_50HZ","SE"]
 
-for cntr in domains:
-    df = e.query_generation_per_plant(country_code=cntr, start=start_pd, end=end_pd)
-    df.to_csv('result3_' + cntr + '.csv', sep=';', header=True)
-    
+#for cntr in domains:
+    #df = e.query_generation_per_plant(country_code=cntr, start=start_pd, end=end_pd)
+    #df.to_csv('GenerationPerPlant_Dec21' + cntr + '.csv', sep=';', header=True)
+df = e.query_crossborder_flows(country_code_from="NO", country_code_to="DE_50HZ", start=start_pd, end=end_pd)
+df.to_csv('CrossBorderFlow_Dec21_NO-DE_50HZ.csv', sep=';', header=True)    
+
 def day_ahead_prices(start, end, country_code):
     today = pd.Timestamp(date.fromtimestamp(time.time()), tz='Europe/Brussels')
     if start is None:
