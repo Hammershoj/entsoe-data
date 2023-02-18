@@ -51,13 +51,46 @@ def paginated(func):
 
     return pagination_wrapper
 
+def documents_limited(n):
+    def decorator(func):
+        """Deals with calls where you cannot query more than n documents at a time, by offsetting per n documents"""
+
+        @wraps(func)
+        def documents_wrapper(*args, **kwargs):
+            frames = []
+            for offset in range(0, 4800 + n, n):
+                try:
+                    frame = func(*args, offset=offset, **kwargs)
+                    frames.append(frame)
+                except NoMatchingDataError:
+                    logging.debug(f"NoMatchingDataError: for offset {offset}")
+                    break
+
+            if len(frames) == 0:
+                # All the data returned are void
+                raise NoMatchingDataError
+
+            df = pd.concat(frames, sort=True)
+            df = df.loc[~df.index.duplicated(keep='first')]
+            return df
+        return documents_wrapper
+    return decorator
+
 
 def year_limited(func):
     """Deals with calls where you cannot query more than a year, by splitting
     the call up in blocks per year"""
 
     @wraps(func)
-    def year_wrapper(*args, start, end, **kwargs):
+    def year_wrapper(*args, start=None, end=None, **kwargs):
+        if start is None or end is None:
+            raise Exception('Please specify the start and end date explicity with start=<date> when calling this '
+                            'function')
+        if type(start) != pd.Timestamp or type(end) != pd.Timestamp:
+            raise Exception('Please use a timezoned pandas object for start and end')
+        if start.tzinfo is None or end.tzinfo is None:
+            raise Exception('Please use a timezoned pandas object for start and end')
+
         blocks = year_blocks(start, end)
         frames = []
         for _start, _end in blocks:

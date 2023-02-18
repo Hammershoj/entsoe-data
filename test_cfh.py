@@ -1,5 +1,5 @@
 import pandas as pd
-import schedule
+#import schedule
 import time
 from datetime import date, timedelta
 from settings import api_key
@@ -7,8 +7,8 @@ from entsoe import EntsoePandasClient
 
 e = EntsoePandasClient(api_key=api_key, retry_count=20, retry_delay=30)
 
-start_pd = pd.Timestamp('20211228', tz='Europe/Brussels')
-end_pd = pd.Timestamp('20211229', tz='Europe/Brussels')
+start_pd = pd.Timestamp('20220912', tz='Europe/Brussels')
+end_pd = pd.Timestamp('20220913', tz='Europe/Brussels')
 
 #s = e.query_imbalance_prices(country_code='BE', start=start, end=end, as_dataframe=True)
 
@@ -37,7 +37,7 @@ def day_ahead_prices(start, end, country_code):
     return
 
 #day_ahead_prices(start_pd,end_pd, 'NO_2')
-schedule.every().day.at("13:10").do(day_ahead_prices, start=start_pd, end=end_pd, country_code='NO_2')
+#schedule.every().day.at("13:10").do(day_ahead_prices, start=start_pd, end=end_pd, country_code='NO_2')
 result = pd.concat(lst)
-#print(lst)
+print(lst)
 result.to_csv('result.csv', sep=';', header=False)
