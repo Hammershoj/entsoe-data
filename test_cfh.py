@@ -7,8 +7,8 @@ from entsoe import EntsoePandasClient
 
 e = EntsoePandasClient(api_key=api_key, retry_count=20, retry_delay=30)
 
-start_pd = pd.Timestamp('20220912', tz='Europe/Brussels')
-end_pd = pd.Timestamp('20220913', tz='Europe/Brussels')
+start_pd = pd.Timestamp('20230508', tz='Europe/Brussels')
+end_pd = pd.Timestamp('20230509', tz='Europe/Brussels')
 
 #s = e.query_imbalance_prices(country_code='BE', start=start, end=end, as_dataframe=True)
 

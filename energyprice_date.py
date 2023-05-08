@@ -45,11 +45,21 @@ def day_ahead_prices(start, end):
     for bzn in domains:
         s = e.query_day_ahead_prices(bzn, start=start, end=end)
         for i in range(0,s.count()):
-             #print("Entsoe ; " + "DayAheadPrice[" + bzn + "]" + " ; " +  str("%.02f" % s[i]) + " ; " +  str(s.index[i].timestamp()))
-             hi.post("Entsoe", "DayAheadPrice[" + bzn + "]" , "%.02f" % s[i], hass_name="Energy Price",  hass_unit="NOK/kWh", ts=s.index[i].timestamp())
+             print("Entsoe ; " + "DayAheadPrice[" + bzn + "]" + " ; " +  str("%.02f" % s[i]) + " ; " +  str(s.index[i].timestamp()))
+             #hi.post("Entsoe", "DayAheadPrice[" + bzn + "]" , "%.02f" % s[i], hass_name="Energy Price",  hass_unit="NOK/kWh", ts=s.index[i].timestamp())
     return
 
+def load_pr_bzn(bzn, start, end):
+    s = e.query_load(bzn, start=start, end=end)
+    for i in range(0,s.count()):
+        print("Entsoe ; " + "Load[" + bzn + "]" + " ; " +  str("%.02f" % s[i]) + " ; " +  str(s.index[i].timestamp()))
+        #hi.post("Entsoe", "Load[" + bzn + "]" , "%.02f" % s[i], hass_name="Load",  hass_unit="MW", ts=s.index[i].timestamp())
+    return
+
+
+
 day_ahead_prices(start_pd, end_pd)
+load_pr_bzn("NO_2", start_pd, end_pd)
 
 #schedule.every().day.at("13:10").do(day_ahead_prices, start=None, end=None)
 
